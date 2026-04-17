@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incode — Gartner Briefing 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Rethink Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: #101010; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; padding: 24px 16px; gap: 16px; }
+
+  /* NAV */
+  .nav { width: 100%; max-width: 960px; display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #181818; border-radius: 10px; border: 1px solid #262626; }
+  .nav-counter { font-size: 13px; color: #6E6E6E; font-variant-numeric: tabular-nums; }
+  .nav-dots { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #21273B; cursor: pointer; border: none; transition: background 0.15s; }
+  .dot.active { background: #006CFF; }
+  .nav-btns { display: flex; gap: 8px; }
+  .nav-btn { background: #222; border: 1px solid #21273B; border-radius: 7px; padding: 6px 16px; font-size: 13px; cursor: pointer; color: #A9A9A9; transition: background 0.15s; }
+  .nav-btn:hover:not(:disabled) { background: #2a2a2a; }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* SLIDE FRAME */
+  .frame { width: 100%; max-width: 960px; aspect-ratio: 16/9; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
+  .slide { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+  .slide.active { display: flex; }
+
+  /* SLIDE THEMES */
+  .s-dark { background: #101010; color: #fff; flex-direction: column; padding: 6% 7%; }
+  .s-blue { background: linear-gradient(135deg, #0a1628 0%, #0033AA 55%, #001166 100%); color: #fff; flex-direction: column; padding: 6% 7%; }
+  .s-white { background: #fff; color: #21273B; flex-direction: column; padding: 3.5% 4.5%; }
+
+  /* INCODE BRAND */
+  .logo { font-size: clamp(14px, 2vw, 20px); font-weight: 700; letter-spacing: -0.02em; }
+  .logo-dark { color: rgba(255,255,255,0.9); }
+  .logo-light { color: #21273B; }
+  .tagline { font-size: clamp(9px, 0.85vw, 12px); color: rgba(255,255,255,0.4); letter-spacing: 0.06em; margin-top: 2px; }
+  .hero-title { font-size: clamp(28px, 5vw, 52px); font-weight: 300; line-height: 1.05; margin: 8% 0 2%; }
+  .hero-sub { font-size: clamp(10px, 1.1vw, 14px); color: rgba(255,255,255,0.45); }
+
+  /* SECTION LABEL + TITLE */
+  .section-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .section-label { font-size: clamp(8px, 0.7vw, 10px); font-weight: 700; color: #006CFF; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+  .section-line { flex: 1; height: 0.5px; background: #E6E6E6; }
+  .slide-title { font-size: clamp(14px,2.1vw,22px); font-weight: 600; color: #21273B; line-height: 1.15; }
+  .slide-sub { font-size: clamp(11px, 1vw, 14px); color: #6E6E6E; margin-top: 4px; }
+  .hdr { margin-bottom: clamp(10px, 1.8vh, 18px); }
+  .accent { width: clamp(20px, 2.5vw, 32px); height: 3px; background: #006CFF; border-radius: 2px; margin: 8px 0 14px; }
+
+  /* FOOTER */
+  .footer { position: absolute; bottom: clamp(6px, 1.5vh, 12px); left: 4.5%; right: 4.5%; display: flex; justify-content: space-between; }
+  .footer-l { font-size: clamp(7px, 0.75vw, 10px); font-weight: 700; color: rgba(0,0,0,0.2); }
+  .footer-r { font-size: clamp(7px, 0.7vw, 9px); color: rgba(0,0,0,0.15); }
+  .footer-lw { color: rgba(255,255,255,0.2); }
+  .footer-rw { color: rgba(255,255,255,0.15); }
+
+  /* 4-PILLAR GRID */
+  .pillars { display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(6px,1vw,12px); flex: 1; }
+  .pillar { background: #F5F5F7; border-radius: 10px; padding: clamp(8px,1.5vh,14px) clamp(8px,1.2vw,14px); border: 0.5px solid #E6E6E6; display: flex; flex-direction: column; }
+  .p-icon { width: clamp(24px,2.2vw,32px); height: clamp(24px,2.2vw,32px); border-radius: 7px; background: #E5F0FF; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .p-icon svg { width: 55%; height: 55%; }
+  .p-title { font-size: clamp(9px,0.95vw,13px); font-weight: 600; color: #21273B; margin-bottom: 5px; }
+  .p-body { font-size: clamp(8px,0.75vw,10px); color: #21273B; line-height: 1.5; flex: 1; }
+  .p-stat { font-size: clamp(16px,1.8vw,24px); font-weight: 700; color: #006CFF; margin-top: 8px; }
+  .p-stat-l { font-size: clamp(7px,0.68vw,9px); color: #6E6E6E; }
+
+  /* COMPARISON TABLE */
+  .ctbl { width: 100%; font-size: clamp(10px,0.9vw,13px); border-collapse: collapse; flex: 1; }
+  .ctbl th { text-align: left; padding: clamp(5px,0.8vh,8px) clamp(6px,0.9vw,10px); font-size: clamp(7px,0.7vw,9px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6E6E6E; border-bottom: 1px solid #E6E6E6; }
+  .ctbl th.hblue { background: #E5F0FF; color: #006CFF; border-radius: 6px 6px 0 0; }
+  .ctbl td { padding: clamp(5px,0.75vh,8px) clamp(6px,0.9vw,10px); border-bottom: 0.5px solid #E6E6E6; vertical-align: top; color: #21273B; line-height: 1.4; }
+  .ctbl td:first-child { font-weight: 600; color: #6E6E6E; font-size: clamp(9px,0.84vw,12px); width: 14%; }
+  .ctbl td:last-child { background: #EEF5FF; }
+  .ctbl tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; background: #E5F0FF; color: #006CFF; font-size: clamp(6px,0.62vw,9px); font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-bottom: 2px; }
+  .tag-r { background: #FEF0F0; color: #c0392b; }
+
+  /* PROOF GRID */
+  .proof-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(6px,1vw,12px); flex: 1; }
+  .pcard { background: #F5F5F7; border-radius: 10px; padding: clamp(10px,1.8vh,16px) clamp(10px,1.4vw,16px); border: 0.5px solid #E6E6E6; display: flex; flex-direction: column; gap: 4px; }
+  .pcard-logo { font-size: clamp(9px,0.82vw,11px); font-weight: 700; color: #21273B; }
+  .pcard-num { font-size: clamp(18px,2.2vw,28px); font-weight: 700; color: #006CFF; line-height: 1; }
+  .pcard-desc { font-size: clamp(8px,0.72vw,10px); color: #21273B; line-height: 1.45; }
+
+  /* LAYERS */
+  .layers { display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(6px,1vw,12px); flex: 1; }
+  .lcard { background: #F5F5F7; border-radius: 10px; padding: clamp(10px,1.8vh,16px) clamp(10px,1.4vw,16px); border: 0.5px solid #E6E6E6; display: flex; flex-direction: column; }
+  .l-num { font-size: clamp(7px,0.7vw,10px); font-weight: 700; color: #006CFF; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .l-title { font-size: clamp(10px,1vw,14px); font-weight: 600; color: #21273B; margin-bottom: 8px; }
+  .l-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .l-list li { font-size: clamp(7px,0.7vw,10px); color: #21273B; line-height: 1.45; padding-left: 10px; position: relative; }
+  .l-list li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 3px; height: 3px; border-radius: 50%; background: #006CFF; }
+
+  /* ICP TABLE */
+  .itbl { width: 100%; font-size: clamp(10px,0.9vw,13px); border-collapse: collapse; flex: 1; }
+  .itbl th { text-align: left; padding: clamp(5px,0.8vh,8px) clamp(6px,0.9vw,10px); font-size: clamp(7px,0.7vw,9px); font-weight: 700; color: #006CFF; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1.5px solid #006CFF; }
+  .itbl td { padding: clamp(4px,0.7vh,7px) clamp(6px,0.9vw,10px); border-bottom: 0.5px solid #E6E6E6; vertical-align: top; color: #21273B; }
+  .itbl td:first-child { font-weight: 600; color: #21273B; white-space: nowrap; }
+  .itbl tr:hover td { background: #EEF5FF; }
+  .lbadge { display: inline-block; background: #E6E6E6; border-radius: 4px; padding: 2px 6px; font-size: clamp(6px,0.6vw,8px); font-weight: 600; color: #21273B; margin: 1px; }
+
+  /* USE CASES */
+  .uc-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: clamp(6px,1vw,12px); flex: 1; }
+  .uccard { background: #F5F5F7; border-radius: 10px; padding: clamp(10px,1.8vh,16px) clamp(10px,1.5vw,16px); border: 0.5px solid #E6E6E6; }
+  .uc-cat { font-size: clamp(7px,0.68vw,9px); font-weight: 700; color: #006CFF; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+  .uc-title { font-size: clamp(13px,1.24vw,17px); font-weight: 600; color: #21273B; margin-bottom: 5px; }
+  .uc-body { font-size: clamp(7px,0.73vw,10px); color: #21273B; line-height: 1.5; }
+  .uc-key { font-size: clamp(10px,0.88vw,12px); color: #21273B; font-weight: 600; margin-top: 6px; }
+  .uc-list { list-style: none; margin: 4px 0 6px; display: flex; flex-direction: column; gap: 5px; }
+  .uc-list li { font-size: clamp(11px,0.96vw,14px); color: #21273B; line-height: 1.45; padding-left: 12px; position: relative; }
+  .uc-list li::before { content: "·"; position: absolute; left: 0; color: #006CFF; font-weight: 700; }
+  .uc-logo { font-size: clamp(9px,0.78vw,11px); color: #A9A9A9; font-weight: 400; }
+
+  /* WIN/LOSE */
+  .wl-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(6px,1vw,12px); flex: 1; }
+  .wcard { border-radius: 10px; padding: clamp(10px,1.8vh,16px) clamp(10px,1.4vw,16px); display: flex; flex-direction: column; gap: 5px; }
+  .wcard-win { background: #f0faf5; border: 0.5px solid #a8d8b9; }
+  .wcard-lose { background: #fff9f0; border: 0.5px solid #e8c97a; }
+  .wcard-skip { background: #F5F5F7; border: 0.5px solid #E6E6E6; }
+  .wcard-hdr { font-size: clamp(7px,0.7vw,9px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+  .wcard-win .wcard-hdr { color: #1a7a45; }
+  .wcard-lose .wcard-hdr { color: #b07d12; }
+  .wcard-skip .wcard-hdr { color: #6E6E6E; }
+  .witem { font-size: clamp(7px,0.75vw,10px); color: #21273B; line-height: 1.4; padding-left: 12px; position: relative; }
+  .witem::before { content: '—'; position: absolute; left: 0; color: #A9A9A9; }
+
+  /* INVESTMENTS */
+  .inv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(6px,1vw,12px); }
+  .inv-grid-2 { grid-template-rows: auto auto; }
+  .icard { background: #F5F5F7; border-radius: 10px; padding: clamp(10px,1.8vh,16px) clamp(10px,1.4vw,16px); border: 0.5px solid #E6E6E6; }
+  .icard-cat { font-size: clamp(7px,0.68vw,9px); font-weight: 700; color: #6E6E6E; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+  .icard-title { font-size: clamp(10px,0.95vw,13px); font-weight: 600; color: #21273B; margin-bottom: 5px; }
+  .icard-body { font-size: clamp(9px,0.84vw,12px); color: #21273B; line-height: 1.5; }
+
+  /* TRUST GRAPH */
+  .tg-split { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(12px,2vw,24px); flex: 1; align-items: center; }
+  .tg-point { margin-bottom: clamp(8px,1.4vh,14px); }
+  .tg-pt { font-size: clamp(11px,1.02vw,14px); font-weight: 600; color: #006CFF; margin-bottom: 3px; }
+  .tg-pb { font-size: clamp(7px,0.75vw,10px); color: #21273B; line-height: 1.5; }
+
+  /* VISION */
+  .vis-cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(16px,2.5vw,32px); flex: 1; align-items: center; }
+  .vis-q { font-size: clamp(11px,1.3vw,17px); font-weight: 300; color: #21273B; line-height: 1.55; font-style: italic; }
+  .vis-auth { font-size: clamp(8px,0.82vw,11px); color: #6E6E6E; margin-top: 10px; }
+  .vis-follow { font-size: clamp(10px,0.92vw,13px); color: #21273B; line-height: 1.6; margin-top: 14px; }
+  .vis-stats { background: #F5F5F7; border-radius: 10px; padding: clamp(12px,2vh,20px) clamp(12px,1.8vw,20px); border: 0.5px solid #E6E6E6; }
+  .vis-stat-row { display: flex; gap: clamp(10px,1.5vw,20px); margin-bottom: 10px; }
+  .vs { flex: 1; }
+  .vs-num { font-size: clamp(16px,1.9vw,24px); font-weight: 700; color: #006CFF; }
+  .vs-lbl { font-size: clamp(7px,0.7vw,9px); color: #777; line-height: 1.4; margin-top: 2px; }
+  .vis-note { font-size: clamp(7px,0.7vw,9px); color: #777; line-height: 1.5; padding-top: 10px; border-top: 0.5px solid #E6E6E6; margin-top: 4px; }
+
+  /* AGENTIC */
+  .ag-cols { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(12px,2vw,24px); flex: 1; align-items: start; }
+  .ag-pt { margin-bottom: clamp(8px,1.4vh,14px); }
+  .ag-pt-t { font-size: clamp(11px,1.02vw,14px); font-weight: 600; color: #21273B; margin-bottom: 3px; }
+  .ag-pt-b { font-size: clamp(7px,0.75vw,10px); color: #21273B; line-height: 1.5; }
+  .ag-box { background: #F5F5F7; border-radius: 10px; padding: clamp(10px,1.8vh,18px) clamp(10px,1.5vw,18px); border: 0.5px solid #E6E6E6; display: flex; flex-direction: column; gap: 6px; }
+  .ag-step { background: #fff; border-radius: 7px; padding: clamp(7px,1.1vh,12px) clamp(8px,1vw,14px); border: 0.5px solid #E6E6E6; }
+  .ag-step-t { font-size: clamp(10px,0.9vw,13px); font-weight: 600; color: #006CFF; }
+  .ag-step-b { font-size: clamp(7px,0.7vw,9px); color: #21273B; margin-top: 2px; line-height: 1.4; }
+  .ag-note { font-size: clamp(6px,0.67vw,9px); color: #A9A9A9; font-style: italic; margin-top: 4px; }
+
+  /* CLOSING */
+  .cl-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(10px,1.5vw,20px); flex: 1; align-items: start; }
+  .clcard { padding-top: clamp(10px,1.5vh,16px); border-top: 2.5px solid #006CFF; }
+  .cl-num { font-size: clamp(22px,2.8vw,36px); font-weight: 300; color: #006CFF; margin-bottom: 4px; }
+  .cl-title { font-size: clamp(10px,1vw,13px); font-weight: 600; color: #21273B; margin-bottom: 6px; }
+  .cl-body { font-size: clamp(8px,0.78vw,10px); color: #21273B; line-height: 1.6; }
+  .validation-bar { margin-top: clamp(8px,1.5vh,14px); padding: clamp(8px,1.2vh,12px) clamp(10px,1.4vw,16px); background: #F5F5F7; border-radius: 8px; border-left: 3px solid #006CFF; font-size: clamp(7px,0.72vw,9px); color: #6E6E6E; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-counter"><span id="cur">1</span> / <span id="tot">17</span></div>
+  <div class="nav-dots" id="dots"></div>
+  <div class="nav-btns">
+    <button class="nav-btn" id="prev" onclick="go(-1)">← Prev</button>
+    <button class="nav-btn" id="next" onclick="go(1)">Next →</button>
+  </div>
+</div>
+
+<div class="frame" id="frame">
+
+  <!-- 1 COVER -->
+  <div class="slide s-blue active" id="s1">
+    <div class="logo logo-dark">incode</div>
+    <div class="tagline">Power a world of trust</div>
+    <div class="hero-title">IDV Magic Quadrant Briefing</div>
+    <div class="hero-sub">April 2026 · Identity Document Verification</div>
+    <div class="footer"><span class="footer-lw"></span><span class="footer-rw">Confidential</span></div>
+  </div>
+
+  <!-- 2 CUSTOMER CHALLENGES: FRAUD CHART -->
+  <div class="slide s-white" id="s2">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">1, Context</div><div class="section-line"></div></div>
+      <div class="slide-title">Digital trust has never been more vulnerable</div>
+      <div class="slide-sub">Attack cost has collapsed. Attack volume has no ceiling. Legacy tools are structurally mismatched to the current environment.</div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(12px,2vw,24px);align-items:center;">
+      <div style="height:100%;display:flex;flex-direction:column;justify-content:center;">
+        <svg viewBox="0 0 480 260" style="width:100%;overflow:visible;">
+          <!-- axes -->
+          <line x1="48" y1="16" x2="48" y2="216" stroke="#E6E6E6" stroke-width="1.5"/>
+          <line x1="48" y1="216" x2="464" y2="216" stroke="#E6E6E6" stroke-width="1.5"/>
+          <text x="12" y="120" font-size="9" fill="#A9A9A9" transform="rotate(-90,12,120)" text-anchor="middle" font-family="Rethink Sans,sans-serif">Volume</text>
+          <!-- gridlines -->
+          <line x1="48" y1="166" x2="464" y2="166" stroke="#F5F5F7" stroke-width="1"/>
+          <line x1="48" y1="116" x2="464" y2="116" stroke="#F5F5F7" stroke-width="1"/>
+          <line x1="48" y1="66" x2="464" y2="66" stroke="#F5F5F7" stroke-width="1"/>
+          <!-- AREA fill under curve for drama -->
+          <path d="M68,208 C100,206 160,200 208,194 C240,190 270,184 310,178 C322,176 330,175 338,172 C348,168 358,158 368,142 C376,128 382,112 390,90 C396,72 404,50 416,32 L416,216 Z" fill="#006CFF" opacity="0.06"/>
+          <!-- FLAT LINEAR ERA (pre-2000 to ~2021), nearly flat -->
+          <path d="M68,208 C100,207 150,205 208,202 C250,200 290,196 338,192" fill="none" stroke="#A9A9A9" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4,3"/>
+          <!-- MAIN CURVE, gradual then explosive -->
+          <path d="M68,208 C120,207 190,204 250,198 C290,194 315,188 338,180 C350,174 358,162 368,142 C376,124 384,100 394,72 C402,50 410,34 416,24" fill="none" stroke="#006CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- FUTURE dashed, near vertical -->
+          <path d="M416,24 C420,18 426,10 432,4" fill="none" stroke="#006CFF" stroke-width="2.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+          <!-- TODAY marker, bold -->
+          <circle cx="416" cy="24" r="7" fill="#006CFF"/>
+          <circle cx="416" cy="24" r="12" fill="#006CFF" opacity="0.15"/>
+          <line x1="416" y1="36" x2="416" y2="216" stroke="#006CFF" stroke-width="1" stroke-dasharray="4,3" opacity="0.25"/>
+          <text x="416" y="11" font-size="9" fill="#006CFF" font-weight="700" text-anchor="middle" font-family="Rethink Sans,sans-serif">TODAY</text>
+          <!-- inflection zone highlight -->
+          <rect x="330" y="16" width="92" height="200" rx="0" fill="#006CFF" opacity="0.03"/>
+          <!-- era dots on curve -->
+          <circle cx="68" cy="208" r="4" fill="#E6E6E6" stroke="#A9A9A9" stroke-width="1"/>
+          <circle cx="138" cy="205" r="4" fill="#E6E6E6" stroke="#A9A9A9" stroke-width="1"/>
+          <circle cx="208" cy="200" r="4" fill="#E6E6E6" stroke="#A9A9A9" stroke-width="1"/>
+          <circle cx="278" cy="193" r="4" fill="#E6E6E6" stroke="#A9A9A9" stroke-width="1"/>
+          <circle cx="338" cy="180" r="5" fill="#A9A9A9"/>
+          <circle cx="378" cy="130" r="5" fill="#006CFF" opacity="0.6"/>
+          <circle cx="408" cy="52" r="5" fill="#006CFF" opacity="0.8"/>
+          <!-- X labels -->
+          <text x="68" y="228" font-size="7.5" fill="#A9A9A9" text-anchor="middle" font-family="Rethink Sans,sans-serif">Pre-2000</text>
+          <text x="68" y="237" font-size="10" fill="#21273B" font-weight="600" text-anchor="middle" font-family="Rethink Sans,sans-serif">Manual fraud</text>
+          <text x="138" y="228" font-size="7.5" fill="#A9A9A9" text-anchor="middle" font-family="Rethink Sans,sans-serif">~2005</text>
+          <text x="138" y="237" font-size="10" fill="#21273B" font-weight="600" text-anchor="middle" font-family="Rethink Sans,sans-serif">Stolen IDs</text>
+          <text x="208" y="228" font-size="7.5" fill="#A9A9A9" text-anchor="middle" font-family="Rethink Sans,sans-serif">~2013</text>
+          <text x="208" y="237" font-size="10" fill="#21273B" font-weight="600" text-anchor="middle" font-family="Rethink Sans,sans-serif">Synthetic IDs</text>
+          <text x="278" y="228" font-size="7.5" fill="#A9A9A9" text-anchor="middle" font-family="Rethink Sans,sans-serif">~2018</text>
+          <text x="278" y="237" font-size="10" fill="#21273B" font-weight="600" text-anchor="middle" font-family="Rethink Sans,sans-serif">Deepfakes</text>
+          <text x="338" y="228" font-size="7.5" fill="#6E6E6E" text-anchor="middle" font-family="Rethink Sans,sans-serif">2021–22</text>
+          <text x="338" y="237" font-size="10" fill="#21273B" font-weight="600" text-anchor="middle" font-family="Rethink Sans,sans-serif">AI-generated</text>
+          <text x="396" y="228" font-size="7.5" fill="#006CFF" text-anchor="middle" font-family="Rethink Sans,sans-serif">2023–24</text>
+          <text x="396" y="237" font-size="10" fill="#006CFF" font-weight="700" text-anchor="middle" font-family="Rethink Sans,sans-serif">AI at scale</text>
+          <text x="444" y="228" font-size="7.5" fill="#6E6E6E" text-anchor="middle" font-family="Rethink Sans,sans-serif">Near future</text>
+          <text x="444" y="237" font-size="10" fill="#6E6E6E" font-weight="600" text-anchor="middle" font-family="Rethink Sans,sans-serif">Agentic AI</text>
+          <!-- annotation callout -->
+          <rect x="262" y="148" width="90" height="22" rx="5" fill="#FFF4F0" stroke="#F26B43" stroke-width="1"/>
+          <text x="307" y="163" font-size="10" fill="#F26B43" font-weight="700" text-anchor="middle" font-family="Rethink Sans,sans-serif">3,000% surge</text>
+          <line x1="352" y1="156" x2="370" y2="138" stroke="#F26B43" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:clamp(8px,1.2vh,14px);">
+        <div style="background:#F5F5F7;border-radius:12px;padding:clamp(12px,2vh,20px) clamp(12px,1.6vw,20px);border:0.5px solid #E6E6E6;border-left:3px solid #006CFF;">
+          <div style="font-size:clamp(26px,3.2vw,42px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">26%</div>
+          <div style="font-size:clamp(11px,0.97vw,14px);color:#21273B;font-weight:600;margin-top:6px;">of fraud sessions now AI-assisted</div>
+          <div style="font-size:clamp(7px,0.68vw,9px);color:#6E6E6E;margin-top:2px;">up from 2% in Q1 2023 · Incode platform data</div>
+        </div>
+        <div style="background:#F5F5F7;border-radius:12px;padding:clamp(12px,2vh,20px) clamp(12px,1.6vw,20px);border:0.5px solid #E6E6E6;border-left:3px solid #006CFF;">
+          <div style="font-size:clamp(26px,3.2vw,42px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">$1</div>
+          <div style="font-size:clamp(11px,0.97vw,14px);color:#21273B;font-weight:600;margin-top:6px;">cost to produce a deepfake today</div>
+          <div style="font-size:clamp(7px,0.68vw,9px);color:#6E6E6E;margin-top:2px;">down from $1,000 in 2020 · takes 18 seconds</div>
+        </div>
+        <div style="background:#F5F5F7;border-radius:12px;padding:clamp(12px,2vh,20px) clamp(12px,1.6vw,20px);border:0.5px solid #E6E6E6;border-left:3px solid #CC2200;">
+          <div style="font-size:clamp(26px,3.2vw,42px);font-weight:700;color:#CC2200;line-height:0.9;letter-spacing:-0.02em;">50%</div>
+          <div style="font-size:clamp(11px,0.97vw,14px);color:#21273B;font-weight:600;margin-top:6px;">projected AI-assisted fraud by end of 2026</div>
+          <div style="font-size:clamp(7px,0.68vw,9px);color:#6E6E6E;margin-top:2px;">agents will run fraud end-to-end, no human involvement</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 2b FOUR PRESSURES RESHAPING IDV 2026 -->
+  <div class="slide s-white" id="s2b">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">1, Market context</div><div class="section-line"></div></div>
+      <div class="slide-title">Four pressures reshaping IDV in 2026</div>
+      <div class="slide-sub">These are the forces defining how IDV is being bought, deployed, and evaluated across industries today.</div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:clamp(8px,1.2vw,14px);">
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+          <div style="width:clamp(20px,1.8vw,26px);height:clamp(20px,1.8vw,26px);border-radius:6px;background:#E5F0FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006CFF" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div style="font-size:clamp(10px,1vw,13px);font-weight:700;color:#21273B;">New use cases beyond onboarding</div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Re-verification and authentication grew 239% YoY — now 62% of total volume, up from under 3% in 2022.</li>
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Each new use case brings a different buyer, budget, and evaluation criteria. IDV is no longer a single-persona sale.</li>
+        </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+          <div style="width:clamp(20px,1.8vw,26px);height:clamp(20px,1.8vw,26px);border-radius:6px;background:#E5F0FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006CFF" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+          <div style="font-size:clamp(10px,1vw,13px);font-weight:700;color:#21273B;">New use cases demand system interoperability</div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Buyers expect pre-built connectors to IAM, ITSM, and HR systems. Buyers want to deploy quickly and launch.</li>
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Key integrations required:
+            <span style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;">
+              <span style="background:#E5F0FF;color:#006CFF;font-size:clamp(6px,0.6vw,8px);font-weight:700;padding:2px 6px;border-radius:3px;">Okta</span>
+              <span style="background:#E5F0FF;color:#006CFF;font-size:clamp(6px,0.6vw,8px);font-weight:700;padding:2px 6px;border-radius:3px;">Azure AD</span>
+              <span style="background:#E5F0FF;color:#006CFF;font-size:clamp(6px,0.6vw,8px);font-weight:700;padding:2px 6px;border-radius:3px;">ServiceNow</span>
+              <span style="background:#E5F0FF;color:#006CFF;font-size:clamp(6px,0.6vw,8px);font-weight:700;padding:2px 6px;border-radius:3px;">Workday</span>
+              <span style="background:#E5F0FF;color:#006CFF;font-size:clamp(6px,0.6vw,8px);font-weight:700;padding:2px 6px;border-radius:3px;">SAP</span>
+              <span style="background:#E5F0FF;color:#006CFF;font-size:clamp(6px,0.6vw,8px);font-weight:700;padding:2px 6px;border-radius:3px;">Epic EHR</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+          <div style="width:clamp(20px,1.8vw,26px);height:clamp(20px,1.8vw,26px);border-radius:6px;background:#E5F0FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006CFF" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <div style="font-size:clamp(10px,1vw,13px);font-weight:700;color:#21273B;">Accessibility as a qualification requirement</div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>WCAG 2.1 AA is a documented RFP requirement in education, healthcare, and EU markets. Vendors without it are cut before evaluation begins.</li>
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Applies to end-user flows and admin portals. Partial compliance doesn't qualify.</li>
+        </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(8px,1.2vh,12px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:3px;border-top:2px solid #006CFF;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+          <div style="width:clamp(20px,1.8vw,26px);height:clamp(20px,1.8vw,26px);border-radius:6px;background:#006CFF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M20 8h2M2 8h2M12 2v2M12 18v2"/></svg></div>
+          <div style="font-size:clamp(10px,1vw,13px);font-weight:700;color:#006CFF;">Agentic identity is an emerging requirement</div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.35;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>By 2027, most online transactions won't involve a human.</li>
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.35;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>The only durable verification anchor of an agent is a link to the verified human behind them.</li>
+          <li style="font-size:clamp(11.5px,0.97vw,14px);color:#21273B;line-height:1.35;padding-left:11px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Our existing identity stack was built to detect humans and needs to iterate for agentic protection.</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- DIV: Our view of identity -->
+  <div class="slide s-dark" id="sdiv1">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 2%;">
+      <div style="font-size:clamp(7px,0.7vw,9px);font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:clamp(8px,1.2vh,14px);">Section 2</div>
+      <div style="font-size:clamp(28px,4.2vw,54px);font-weight:300;color:#fff;line-height:1.1;">Our view of identity</div>
+      <div style="width:clamp(32px,3.5vw,48px);height:3px;background:#006CFF;border-radius:2px;margin:clamp(12px,1.8vh,20px) 0;"></div>
+      <div style="font-size:clamp(11px,1.02vw,14px);color:rgba(255,255,255,0.45);max-width:50%;">Which questions IDV must answer, how capabilities evolve, and Incode's position in the market.</div>
+    </div>
+    <div class="footer"><span class="footer-lw">incode</span><span class="footer-rw">Confidential</span></div>
+  </div>
+
+  <!-- 3b QUESTIONS IDV MUST ANSWER -->
+  <div class="slide s-white" id="s3b">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">2, Market direction (cont.)</div><div class="section-line"></div></div>
+      <div class="slide-title">Three questions IDV must answer today</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,1.8vh,20px);">
+      <div style="display:grid;grid-template-columns:clamp(28px,3vw,40px) 1fr 1.8fr;gap:clamp(10px,1.5vw,20px);align-items:start;">
+        <div style="font-size:clamp(32px,4.5vw,56px);font-weight:700;color:#006CFF;line-height:1;padding-top:4px;">1</div>
+        <div style="padding-top:6px;">
+          <div style="font-size:clamp(11px,1.2vw,16px);font-weight:700;color:#21273B;margin-bottom:4px;">Is this entity real?</div>
+          <div style="font-size:clamp(10px,0.9vw,13px);color:#6E6E6E;">Liveness detection · injection attack detection · behavioral signals</div>
+        </div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;">
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Liveness is table stakes. Every vendor has it.</li>
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>The gap opens with injection attacks: virtual cameras feeding pre-recorded footage directly into the capture pipeline.</li>
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Detecting injections requires a layered approach: device signals, behavioral context, and network telemetry.</li>
+          </ul>
+        </div>
+      </div>
+      <div style="height:0.5px;background:#E6E6E6;"></div>
+      <div style="display:grid;grid-template-columns:clamp(28px,3vw,40px) 1fr 1.8fr;gap:clamp(10px,1.5vw,20px);align-items:start;">
+        <div style="font-size:clamp(32px,4.5vw,56px);font-weight:700;color:#006CFF;line-height:1;padding-top:4px;">2</div>
+        <div style="padding-top:6px;">
+          <div style="font-size:clamp(11px,1.2vw,16px);font-weight:700;color:#21273B;margin-bottom:4px;">Is this person who they claim to be?</div>
+          <div style="font-size:clamp(10px,0.9vw,13px);color:#6E6E6E;">Biometric match · authoritative source verification · document authenticity</div>
+        </div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;">
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>95% of synthetic identities go undetected during onboarding. (Thomson Reuters)</li>
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Data and document checks are not enough.</li>
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Deterministic verification matches against biometric records directly. Users cannot manipulate a system of record.</li>
+          </ul>
+        </div>
+      </div>
+      <div style="height:0.5px;background:#E6E6E6;"></div>
+      <div style="display:grid;grid-template-columns:clamp(28px,3vw,40px) 1fr 1.8fr;gap:clamp(10px,1.5vw,20px);align-items:start;">
+        <div style="font-size:clamp(32px,4.5vw,56px);font-weight:700;color:#006CFF;line-height:1;padding-top:4px;">3</div>
+        <div style="padding-top:6px;">
+          <div style="font-size:clamp(11px,1.2vw,16px);font-weight:700;color:#21273B;margin-bottom:4px;">Can we trust this identity over time?</div>
+          <div style="font-size:clamp(10px,0.9vw,13px);color:#6E6E6E;">Cross-institution signals · first-party fraud · lifecycle monitoring · network intelligence</div>
+        </div>
+        <div style="background:#E5F0FF;border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #B8D4FF;">
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Identity signals need to stay connected after onboarding — a 360-degree view of the user across their lifecycle.</li>
+            <li style="font-size:clamp(11px,0.97vw,14px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Account takeover, synthetic identity reuse across institutions, and first-party fraud from verified customers are all invisible without cross-institutional signal sharing.</li>
+            </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 3c CAPABILITY DEPTH -->
+  <div class="slide s-white" id="s3c">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">2 — Market direction (cont.)</div><div class="section-line"></div></div>
+      <div class="slide-title">The gap between legacy IDV and what the market now requires</div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;align-items:stretch;">
+
+      <!-- Col 1: Table stakes -->
+      <div style="display:flex;flex-direction:column;border-radius:12px;overflow:hidden;border:0.5px solid #E6E6E6;margin-right:clamp(8px,1vw,16px);">
+        <div style="background:#F5F5F7;padding:clamp(10px,1.4vh,16px) clamp(12px,1.4vw,18px);border-bottom:0.5px solid #E6E6E6;">
+          <div style="font-size:clamp(7px,0.65vw,9px);font-weight:700;color:#A9A9A9;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:3px;">Table stakes</div>
+          <div style="font-size:clamp(11px,1.1vw,15px);font-weight:700;color:#6E6E6E;">Available across the market</div>
+        </div>
+        <div style="background:#F5F5F7;padding:clamp(10px,1.4vh,16px) clamp(12px,1.4vw,18px);flex:1;">
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:0;">
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #E6E6E6;"><span style="position:absolute;left:0;color:#A9A9A9;">·</span>Document capture and OCR</li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #E6E6E6;"><span style="position:absolute;left:0;color:#A9A9A9;">·</span>Facial liveness detection</li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #E6E6E6;"><span style="position:absolute;left:0;color:#A9A9A9;">·</span>Document-to-face biometric match</li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #E6E6E6;"><span style="position:absolute;left:0;color:#A9A9A9;">·</span>AML and sanctions screening</li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;padding:7px 0 7px 14px;position:relative;"><span style="position:absolute;left:0;color:#A9A9A9;">·</span>Audit trail and compliance reporting</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Col 2: Challenges — no box, floating text -->
+      <div style="display:flex;flex-direction:column;justify-content:center;padding:clamp(12px,1.8vh,22px) clamp(16px,2vw,28px);gap:clamp(10px,1.5vh,16px);">
+        <div style="font-size:clamp(7px,0.65vw,9px);font-weight:700;color:#21273B;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:2px;">Challenges with current IDV</div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#21273B;flex-shrink:0;margin-top:5px;opacity:0.28;"></div>
+          <div style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;">Every user re-verifies from scratch</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#21273B;flex-shrink:0;margin-top:5px;opacity:0.28;"></div>
+          <div style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;">Point-in-time checks have no visibility into what happens next</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#21273B;flex-shrink:0;margin-top:5px;opacity:0.28;"></div>
+          <div style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;">Each deployment is a custom project without pre-built integrations</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#21273B;flex-shrink:0;margin-top:5px;opacity:0.28;"></div>
+          <div style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;">AI-driven attacks outpace detection</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#21273B;flex-shrink:0;margin-top:5px;opacity:0.28;"></div>
+          <div style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;">Accessibility failures disqualify vendors before evaluation begins</div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#21273B;flex-shrink:0;margin-top:5px;opacity:0.28;"></div>
+          <div style="font-size:clamp(10px,0.92vw,13px);color:#6E6E6E;line-height:1.5;">User data leaves the device and persists on vendor servers</div>
+        </div>
+      </div>
+
+      <!-- Col 3: Incode -->
+      <div style="display:flex;flex-direction:column;border-radius:12px;overflow:hidden;border:0.5px solid #B8D4FF;margin-left:clamp(8px,1vw,16px);">
+        <div style="background:#EAF3FF;padding:clamp(10px,1.4vh,16px) clamp(12px,1.4vw,18px);border-bottom:0.5px solid #B8D4FF;">
+          <div style="font-size:clamp(7px,0.65vw,9px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:3px;">Best in class IDV</div>
+          <div style="font-size:clamp(11px,1.1vw,15px);font-weight:700;color:#21273B;">Where Incode operates</div>
+        </div>
+        <div style="background:#EAF3FF;padding:clamp(10px,1.4vh,16px) clamp(12px,1.4vw,18px);flex:1;">
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:0;">
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#21273B;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #B8D4FF;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span><strong>Reusable identity</strong></li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#21273B;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #B8D4FF;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span><strong>Continuous lifecycle coverage</strong></li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#21273B;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #B8D4FF;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span><strong>Out-of-box integrations</strong> with ITSM, IAM, and HR systems</li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#21273B;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-bottom:0.5px solid #B8D4FF;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span><strong>Vertically integrated, self-learning platform</strong></li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#21273B;line-height:1.5;padding:7px 0 7px 14px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span><strong>WCAG 2.1 AA accessibility</strong></li>
+            <li style="font-size:clamp(10px,0.92vw,13px);color:#21273B;line-height:1.5;padding:7px 0 7px 14px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span><strong>Privacy by design</strong> — only requested data is collected, processed on-device where possible, and deleted after verification</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 4 VISION: Ricardo -->
+  <div class="slide s-white" id="s4">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">3 — Vision</div><div class="section-line"></div></div>
+      <div class="slide-title">Incode's vision</div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;">
+      <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:clamp(20px,3vw,40px);align-items:center;width:100%;">
+        <div style="display:flex;flex-direction:column;gap:clamp(10px,1.8vh,20px);">
+          <div style="width:clamp(28px,3vw,40px);height:3px;background:#006CFF;border-radius:2px;"></div>
+          <div style="font-size:clamp(16px,2vw,26px);font-weight:400;color:#21273B;line-height:1.5;font-style:italic;">"Incode delivers privacy-preserving identity intelligence at the speed of the decision — so enterprises can safely approve more, automate more, and grow faster. When Incode wins, trust is invisible."</div>
+          <div style="font-size:clamp(11px,1.02vw,14px);color:#6E6E6E;font-weight:600;">Ricardo Amper, Founder and CEO</div>
+        </div>
+        <div style="background:#E6E6E6;height:80%;width:1px;justify-self:center;"></div>
+        <div style="display:flex;flex-direction:column;gap:clamp(10px,1.6vh,18px);">
+          <div style="font-size:clamp(9px,0.82vw,11px);font-weight:700;color:#21273B;text-transform:uppercase;letter-spacing:0.08em;">In 3 to 5 years</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:clamp(8px,1.3vh,14px);">
+            <li style="font-size:clamp(11px,1.02vw,14px);color:#21273B;line-height:1.5;padding-left:13px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Verification is the entry point. The intelligence it generates across the lifecycle is the product.</li>
+            <li style="font-size:clamp(11px,1.02vw,14px);color:#21273B;line-height:1.5;padding-left:13px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Prevention is the floor. Growth is the ceiling. Enterprises using this intelligence don't just pass or fail applicants. They right-size decisions, reduce friction for low-risk users, and personalize the journey based on verified context.</li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- DIV: Incode today -->
+  <div class="slide s-dark" id="sdiv2">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 2%;">
+      <div style="font-size:clamp(7px,0.7vw,9px);font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:clamp(8px,1.2vh,14px);">Section 3</div>
+      <div style="font-size:clamp(28px,4.2vw,54px);font-weight:300;color:#fff;line-height:1.1;">Incode today</div>
+      <div style="width:clamp(32px,3.5vw,48px);height:3px;background:#006CFF;border-radius:2px;margin:clamp(12px,1.8vh,20px) 0;"></div>
+      <div style="font-size:clamp(11px,1.02vw,14px);color:rgba(255,255,255,0.45);max-width:50%;">What we solve for  ·  What changed since last year  ·  Where we win</div>
+    </div>
+    <div class="footer"><span class="footer-lw">incode</span><span class="footer-rw">Confidential</span></div>
+  </div>
+
+  <!-- 5 PROOF POINTS -->
+  <div class="slide s-white" id="s5">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">4 — Outcomes</div><div class="section-line"></div></div>
+      <div class="slide-title">Problems Incode solves</div>
+      <div class="slide-sub">Delivered impact across three outcomes.</div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(10px,1.4vw,18px);">
+
+      <!-- COLUMN 1: Reducing identity threats -->
+      <div style="display:flex;flex-direction:column;gap:clamp(6px,1vh,10px);">
+        <div style="font-size:clamp(8px,0.75vw,10px);font-weight:700;color:#21273B;text-transform:uppercase;letter-spacing:0.08em;padding-bottom:6px;border-bottom:2px solid #21273B;">Reducing identity threats</div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">T-Mobile</div>
+          <div style="font-size:clamp(26px,3.4vw,44px);font-weight:700;color:#006CFF;line-height:0.85;letter-spacing:-0.02em;">$140M</div>
+          <div style="height:2px;width:24px;background:#006CFF;border-radius:1px;margin:5px 0 8px;"></div>
+          <div style="font-size:clamp(9.5px,0.85vw,12px);font-weight:700;color:#21273B;line-height:1.4;margin-bottom:5px;">In fraud prevented on the platform</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+            <li style="font-size:clamp(9.5px,0.85vw,12px);color:#21273B;line-height:1.4;padding-left:10px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Became primary authentication layer for consumer onboarding and account management</li>
+          </ul>
+        </div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">Davivienda</div>
+          <div style="font-size:clamp(26px,3.4vw,44px);font-weight:700;color:#006CFF;line-height:0.85;letter-spacing:-0.02em;">94%</div>
+          <div style="height:2px;width:24px;background:#006CFF;border-radius:1px;margin:5px 0 8px;"></div>
+          <div style="font-size:clamp(9.5px,0.85vw,12px);font-weight:700;color:#21273B;line-height:1.4;margin-bottom:5px;">Fraud reduction, false positives from 30% to 0.1%</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+            <li style="font-size:clamp(9.5px,0.85vw,12px);color:#21273B;line-height:1.4;padding-left:10px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;">·</span>End-user experience improved simultaneously</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: Improving conversion -->
+      <div style="display:flex;flex-direction:column;gap:clamp(6px,1vh,10px);">
+        <div style="font-size:clamp(8px,0.75vw,10px);font-weight:700;color:#21273B;text-transform:uppercase;letter-spacing:0.08em;padding-bottom:6px;border-bottom:2px solid #21273B;">Improving conversion</div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">Klar</div>
+          <div style="font-size:clamp(26px,3.4vw,44px);font-weight:700;color:#006CFF;line-height:0.85;letter-spacing:-0.02em;">+80%</div>
+          <div style="height:2px;width:24px;background:#006CFF;border-radius:1px;margin:5px 0 8px;"></div>
+          <div style="font-size:clamp(9.5px,0.85vw,12px);font-weight:700;color:#21273B;line-height:1.4;margin-bottom:5px;">Conversion increase post-deployment</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+            <li style="font-size:clamp(9.5px,0.85vw,12px);color:#21273B;line-height:1.4;padding-left:10px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Accessible, low-friction flow that does not exclude users with lower digital literacy</li>
+          </ul>
+        </div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">Chime</div>
+          <div style="font-size:clamp(26px,3.4vw,44px);font-weight:700;color:#006CFF;line-height:0.85;letter-spacing:-0.02em;">38%</div>
+          <div style="height:2px;width:24px;background:#006CFF;border-radius:1px;margin:5px 0 8px;"></div>
+          <div style="font-size:clamp(9.5px,0.85vw,12px);font-weight:700;color:#21273B;line-height:1.4;margin-bottom:5px;">Fraud reduction unlocking higher conversion</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+            <li style="font-size:clamp(9.5px,0.85vw,12px);color:#21273B;line-height:1.4;padding-left:10px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Displaced prior vendor after a 6-month head-to-head comparison · now at 10M+ verifications</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: Enabling compliance -->
+      <div style="display:flex;flex-direction:column;gap:clamp(6px,1vh,10px);">
+        <div style="font-size:clamp(8px,0.75vw,10px);font-weight:700;color:#21273B;text-transform:uppercase;letter-spacing:0.08em;padding-bottom:6px;border-bottom:2px solid #21273B;">Enabling compliance</div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">TikTok</div>
+          <div style="font-size:clamp(26px,3.4vw,44px);font-weight:700;color:#006CFF;line-height:0.85;letter-spacing:-0.02em;">100%</div>
+          <div style="height:2px;width:24px;background:#006CFF;border-radius:1px;margin:5px 0 8px;"></div>
+          <div style="font-size:clamp(9.5px,0.85vw,12px);font-weight:700;color:#21273B;line-height:1.4;margin-bottom:5px;">Age verification compliance globally</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+            <li style="font-size:clamp(9.5px,0.85vw,12px);color:#21273B;line-height:1.4;padding-left:10px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Expanded from 1 to 3 use cases · 85x growth since deployment</li>
+          </ul>
+        </div>
+        <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.6vh,16px) clamp(10px,1.4vw,16px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">BetMGM</div>
+          <div style="font-size:clamp(26px,3.4vw,44px);font-weight:700;color:#006CFF;line-height:0.85;letter-spacing:-0.02em;">100%</div>
+          <div style="height:2px;width:24px;background:#006CFF;border-radius:1px;margin:5px 0 8px;"></div>
+          <div style="font-size:clamp(9.5px,0.85vw,12px);font-weight:700;color:#21273B;line-height:1.4;margin-bottom:5px;">Compliant across EU DSA, UK Online Safety Act, and US mandates</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:3px;">
+            <li style="font-size:clamp(9.5px,0.85vw,12px);color:#21273B;line-height:1.4;padding-left:10px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Single platform deployment across all jurisdictions</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 5b WHAT CHANGED SINCE LAST YEAR -->
+  <div class="slide s-white" id="s5b">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">4 — Momentum</div><div class="section-line"></div></div>
+      <div class="slide-title">What changed since last year</div>
+      <div class="slide-sub">Incode is materially stronger across product, growth, use case coverage, core technology, and team.</div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:clamp(8px,1.1vw,14px);">
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(10px,1.3vw,16px);border:0.5px solid #E6E6E6;border-top:2.5px solid #006CFF;display:flex;flex-direction:column;gap:4px;">
+        <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">Business growth</div>
+        <div style="font-size:clamp(22px,3vw,38px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">700+</div>
+        <div style="font-size:clamp(10px,0.9vw,13px);color:#21273B;font-weight:600;margin-top:4px;">enterprise clients globally</div>
+        <ul style="list-style:none;margin-top:4px;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>8/10 top US banks · 7/8 top US telcos</li>
+          </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(10px,1.3vw,16px);border:0.5px solid #E6E6E6;border-top:2.5px solid #006CFF;display:flex;flex-direction:column;gap:4px;">
+        <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">Customer retention</div>
+        <div style="font-size:clamp(22px,3vw,38px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">291%</div>
+        <div style="font-size:clamp(10px,0.9vw,13px);color:#21273B;font-weight:600;margin-top:4px;">cohorted NDR at Year 5</div>
+        <ul style="list-style:none;margin-top:4px;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Clients don't just renew — they expand across use cases every year</li>
+          </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(10px,1.3vw,16px);border:0.5px solid #E6E6E6;border-top:2.5px solid #006CFF;display:flex;flex-direction:column;gap:4px;">
+        <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">M&amp;A and consolidation</div>
+        <div style="font-size:clamp(22px,3vw,38px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">3</div>
+        <div style="font-size:clamp(10px,0.9vw,13px);color:#21273B;font-weight:600;margin-top:4px;">acquisitions in 24 months</div>
+        <ul style="list-style:none;margin-top:4px;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>MetaMap · AuthenticID · and one additional acquisition in progress</li>
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Each added geographic coverage, identity data, or network scale</li>
+        </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(10px,1.3vw,16px);border:0.5px solid #E6E6E6;border-top:2.5px solid #006CFF;display:flex;flex-direction:column;gap:4px;">
+        <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">Use case expansion</div>
+        <div style="font-size:clamp(22px,3vw,38px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">239%</div>
+        <div style="font-size:clamp(10px,0.9vw,13px);color:#21273B;font-weight:600;margin-top:4px;">YoY growth in re-verification volume</div>
+        <ul style="list-style:none;margin-top:4px;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>62% of total volume now recurring — was under 3% in 2022</li>
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>New verticals: workforce, healthcare, education, age verification</li>
+        </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(10px,1.3vw,16px);border:0.5px solid #E6E6E6;border-top:2.5px solid #006CFF;display:flex;flex-direction:column;gap:4px;">
+        <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">Geographic and regulatory reach</div>
+        <div style="font-size:clamp(22px,3vw,38px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">7.1B+</div>
+        <div style="font-size:clamp(10px,0.9vw,13px);color:#21273B;font-weight:600;margin-top:4px;">identity checks processed</div>
+        <ul style="list-style:none;margin-top:4px;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>400M+ profiles across 65+ nationalities</li>
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#6E6E6E;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Active in US, LATAM, EMEA — APAC planned 2027</li>
+        </ul>
+      </div>
+
+      <div style="background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.5vh,16px) clamp(10px,1.3vw,16px);border:0.5px solid #E6E6E6;border-top:2.5px solid #006CFF;display:flex;flex-direction:column;gap:4px;">
+        <div style="font-size:clamp(7px,0.68vw,9px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">Team and org</div>
+        <div style="font-size:clamp(22px,3vw,38px);font-weight:700;color:#006CFF;line-height:0.9;letter-spacing:-0.02em;">23%</div>
+        <div style="font-size:clamp(10px,0.9vw,13px);color:#21273B;font-weight:600;margin-top:4px;">headcount growth · 3 new offices</div>
+        <ul style="list-style:none;margin-top:4px;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#21273B;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Hired CMO</li>
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#21273B;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Hired legal counsel and privacy</li>
+          <li style="font-size:clamp(7px,0.7vw,9px);color:#21273B;padding-left:10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:#006CFF;">·</span>Hired GM for North America</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 6 DIFFERENTIATION -->
+  <div class="slide s-white" id="s6">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">5 — Differentiation · Option A</div><div class="section-line"></div></div>
+      <div class="slide-title">Why Incode's advantage compounds</div>
+      <div class="slide-sub">Four layers that reinforce each other. No competitor can replicate the combination.</div>
+    </div>
+    <div class="layers">
+      <div class="lcard">
+        <div class="l-num">Layer 1</div>
+        <div class="l-title">Data nobody else has</div>
+        <ul class="l-list">
+          <li>7.1B+ checks across geographies</li>
+                    <li>Exclusive govt. biometric data rights — US DMVs, LATAM systems, requires regulatory approval to replicate</li>
+          
+        </ul>
+      </div>
+      <div class="lcard">
+        <div class="l-num">Layer 2</div>
+        <div class="l-title">Foundational models</div>
+        <ul class="l-list">
+          <li>End-to-end ownership of the fraud and conversion cycle — no third-party dependencies means faster iteration. New attack patterns are detected and countered in hours, not months.</li>
+          <li>42 proprietary deep models — no 3rd-party ML</li>
+          <li>Few-shot: detects new patterns with 0–5 samples vs. 10,000+ for standard approaches</li>
+          <li>NIST #1 face recognition, h_da #1 liveness, iBeta first passive liveness cert</li>
+          <li>68x lower FAR vs. second-best on identity deepfakes</li>
+        </ul>
+      </div>
+      <div class="lcard">
+        <div class="l-num">Layer 3</div>
+        <div class="l-title">Network effect</div>
+        <ul class="l-list">
+          <li>Trust Graph: cross-institution fraud signals via Secure MPC — no PII shared</li>
+          <li>Bidirectional: flags bad actors AND accelerates verified good actors</li>
+          <li>400M+ identities. Value scales as n², cost scales linearly.</li>
+          <li>Flywheel: more clients → more data → better models → stronger network</li>
+        </ul>
+      </div>
+      <div class="lcard">
+        <div class="l-num">Layer 4</div>
+        <div class="l-title">Enterprise platform</div>
+        <ul class="l-list">
+          <li>One platform wraps all three layers — single data pipeline, shared feedback loop</li>
+          <li>Land &amp; expand: onboarding → auth → monitoring → Trust Graph</li>
+          <li>Clients using 5+ products = 61% of ARR</li>
+          <li>Year 5 cohorted NDR: 291%</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 6b COMPOUNDING ADVANTAGE DIAGRAM -->
+  <div class="slide s-white" id="s6b">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">5 — Differentiation · Option B</div><div class="section-line"></div></div>
+      <div class="slide-title">Why Incode's advantage compounds</div>
+      <div class="slide-sub">Four layers that reinforce each other. No competitor can replicate the combination.</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+
+      <!-- Layer diagram -->
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <svg width="100%" viewBox="0 0 680 340" style="max-height:280px;">
+          <defs>
+            <marker id="dot6b" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5">
+              <circle cx="3" cy="3" r="2.5" fill="#006CFF"/>
+            </marker>
+          </defs>
+
+          <!-- Layer 4 back — darkest gray -->
+          <polygon points="60,18 330,0 368,24 98,44" fill="#3A3A3A" stroke="#4A4A4A" stroke-width="0.5"/>
+          <polygon points="60,44 330,24 330,80 60,100" fill="#2E2E2E" stroke="#3E3E3E" stroke-width="0.5"/>
+          <polygon points="330,24 368,0 368,56 330,80" fill="#222222" stroke="#333333" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="9" font-weight="700" fill="#006CFF" x="88" y="56" letter-spacing="0.1em">LAYER 4</text>
+          <text font-family="'Rethink Sans',sans-serif" font-size="14" font-weight="500" fill="#FFFFFF" x="88" y="74">Enterprise platform</text>
+          <circle cx="348" cy="42" r="3.5" fill="#006CFF"/>
+          <line x1="348" y1="42" x2="410" y2="42" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="42" x2="410" y2="32" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="32" x2="658" y2="32" stroke="#006CFF" stroke-width="1"/>
+          <rect x="412" y="16" width="244" height="30" rx="6" fill="#F5F5F7" stroke="#E6E6E6" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="11" fill="#6E6E6E" x="424" y="35">One platform · land and expand · 291% NDR</text>
+
+          <!-- Layer 3 -->
+          <polygon points="46,108 316,88 354,112 84,134" fill="#545454" stroke="#646464" stroke-width="0.5"/>
+          <polygon points="46,134 316,114 316,170 46,190" fill="#484848" stroke="#585858" stroke-width="0.5"/>
+          <polygon points="316,114 354,90 354,146 316,170" fill="#3C3C3C" stroke="#4C4C4C" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="9" font-weight="700" fill="#006CFF" x="74" y="146" letter-spacing="0.1em">LAYER 3</text>
+          <text font-family="'Rethink Sans',sans-serif" font-size="14" font-weight="500" fill="#FFFFFF" x="74" y="164">Network effect</text>
+          <circle cx="334" cy="130" r="3.5" fill="#006CFF"/>
+          <line x1="334" y1="130" x2="410" y2="130" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="130" x2="410" y2="120" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="120" x2="658" y2="120" stroke="#006CFF" stroke-width="1"/>
+          <rect x="412" y="106" width="244" height="30" rx="6" fill="#F5F5F7" stroke="#E6E6E6" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="11" fill="#6E6E6E" x="424" y="125">Trust Graph · 400M+ identities · scales as n²</text>
+
+          <!-- Layer 2 -->
+          <polygon points="30,198 300,178 338,202 68,224" fill="#6E6E6E" stroke="#7E7E7E" stroke-width="0.5"/>
+          <polygon points="30,224 300,204 300,260 30,280" fill="#626262" stroke="#727272" stroke-width="0.5"/>
+          <polygon points="300,204 338,180 338,236 300,260" fill="#565656" stroke="#666666" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="9" font-weight="700" fill="#006CFF" x="58" y="236" letter-spacing="0.1em">LAYER 2</text>
+          <text font-family="'Rethink Sans',sans-serif" font-size="14" font-weight="500" fill="#FFFFFF" x="58" y="254">Foundational models</text>
+          <circle cx="318" cy="220" r="3.5" fill="#006CFF"/>
+          <line x1="318" y1="220" x2="410" y2="220" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="220" x2="410" y2="210" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="210" x2="658" y2="210" stroke="#006CFF" stroke-width="1"/>
+          <rect x="412" y="196" width="244" height="30" rx="6" fill="#F5F5F7" stroke="#E6E6E6" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="11" fill="#6E6E6E" x="424" y="215">42 proprietary models · NIST #1 · iBeta Level 3</text>
+
+          <!-- Layer 1 front — lightest gray -->
+          <polygon points="14,288 284,268 322,292 52,314" fill="#A9A9A9" stroke="#B9B9B9" stroke-width="0.5"/>
+          <polygon points="14,314 284,294 284,330 14,330" fill="#9C9C9C" stroke="#ACACAC" stroke-width="0.5"/>
+          <polygon points="284,294 322,270 322,308 284,330" fill="#909090" stroke="#A0A0A0" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="9" font-weight="700" fill="#006CFF" x="42" y="308" letter-spacing="0.1em">LAYER 1</text>
+          <text font-family="'Rethink Sans',sans-serif" font-size="14" font-weight="500" fill="#FFFFFF" x="42" y="324">Data nobody else has</text>
+          <circle cx="302" cy="308" r="3.5" fill="#006CFF"/>
+          <line x1="302" y1="308" x2="410" y2="308" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="308" x2="410" y2="298" stroke="#006CFF" stroke-width="1"/>
+          <line x1="410" y1="298" x2="658" y2="298" stroke="#006CFF" stroke-width="1"/>
+          <rect x="412" y="284" width="244" height="30" rx="6" fill="#F5F5F7" stroke="#E6E6E6" stroke-width="0.5"/>
+          <text font-family="'Rethink Sans',sans-serif" font-size="11" fill="#6E6E6E" x="424" y="303">4.1B+ checks · govt. biometric SOR · 65+ nationalities</text>
+        </svg>
+      </div>
+
+      <!-- Flywheel strip -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;background:#F5F5F7;border-radius:10px;padding:clamp(10px,1.4vh,16px) clamp(12px,1.4vw,18px);border:0.5px solid #E6E6E6;">
+        <div style="font-size:clamp(8px,0.72vw,10px);font-weight:700;color:#006CFF;text-transform:uppercase;letter-spacing:0.1em;margin-right:clamp(12px,1.6vw,20px);flex-shrink:0;">Flywheel</div>
+        <div style="display:flex;align-items:center;gap:clamp(6px,1vw,14px);">
+          <div style="font-size:clamp(10px,0.92vw,13px);font-weight:600;color:#21273B;">More clients</div>
+          <div style="color:#006CFF;font-size:clamp(10px,0.9vw,12px);">→</div>
+          <div style="font-size:clamp(10px,0.92vw,13px);font-weight:600;color:#21273B;">More data</div>
+          <div style="color:#006CFF;font-size:clamp(10px,0.9vw,12px);">→</div>
+          <div style="font-size:clamp(10px,0.92vw,13px);font-weight:600;color:#21273B;">Better models</div>
+          <div style="color:#006CFF;font-size:clamp(10px,0.9vw,12px);">→</div>
+          <div style="font-size:clamp(10px,0.92vw,13px);font-weight:600;color:#21273B;">Stronger network</div>
+          <div style="color:#006CFF;font-size:clamp(10px,0.9vw,12px);">→</div>
+          <div style="font-size:clamp(10px,0.92vw,13px);font-weight:600;color:#006CFF;">More clients</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 7 ICP -->
+  <div class="slide s-white" id="s7">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">6 — Market position</div><div class="section-line"></div></div>
+      <div class="slide-title">Where Incode is most effective</div>
+      <div class="slide-sub">Incode wins consistently where identity failure carries a direct, measurable business cost.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:clamp(6px,0.8vw,10px);margin-bottom:clamp(6px,1vh,10px);flex-wrap:wrap;">
+      <span style="font-size:clamp(7px,0.65vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;margin-right:2px;">Primary buyers</span>
+      <span style="background:#F5F5F7;border:0.5px solid #E6E6E6;border-radius:20px;padding:3px 10px;font-size:clamp(7px,0.68vw,9px);font-weight:600;color:#21273B;white-space:nowrap;">Chief Compliance Officer and Fraud Team</span>
+      <span style="background:#F5F5F7;border:0.5px solid #E6E6E6;border-radius:20px;padding:3px 10px;font-size:clamp(7px,0.68vw,9px);font-weight:600;color:#21273B;white-space:nowrap;">CISO and IAM Lead</span>
+      <span style="background:#F5F5F7;border:0.5px solid #E6E6E6;border-radius:20px;padding:3px 10px;font-size:clamp(7px,0.68vw,9px);font-weight:600;color:#21273B;white-space:nowrap;">Growth and Onboarding PMs</span>
+      <span style="background:#F5F5F7;border:0.5px solid #E6E6E6;border-radius:20px;padding:3px 10px;font-size:clamp(7px,0.68vw,9px);font-weight:600;color:#21273B;white-space:nowrap;">Legal and Compliance Officer</span>
+      <span style="background:#F5F5F7;border:0.5px solid #E6E6E6;border-radius:20px;padding:3px 10px;font-size:clamp(7px,0.68vw,9px);font-weight:600;color:#21273B;white-space:nowrap;">Trust and Safety</span>
+    </div>
+    <table class="itbl" style="flex:1;">
+      <thead><tr><th>Vertical</th><th>Core problem</th><th>Why Incode</th><th>Clients</th></tr></thead>
+      <tbody>
+        <tr><td>Financial services</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">Synthetic IDs, KYC failures, manual review backlog, account takeover</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">Government biometric verification — instant decisions, no human review. One platform: onboarding, auth, monitoring.</td><td><div style="display:flex;flex-wrap:wrap;gap:3px;"><span class="lbadge">Citi</span><span class="lbadge">Wells Fargo</span><span class="lbadge">Chime</span><span class="lbadge">Banorte</span></div></td></tr>
+        <tr><td>Telecom</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">SIM swap fraud, account takeover via weak re-auth</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">Real-time SIM swap detection + step-up re-auth. Low FP rates — good subscribers aren't blocked.</td><td><div style="display:flex;flex-wrap:wrap;gap:3px;"><span class="lbadge">T-Mobile</span><span class="lbadge">AT&T</span><span class="lbadge">Charter</span></div></td></tr>
+        <tr><td>Gaming / crypto</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">Age verification mandates, account fraud, rising regulatory pressure</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">Full audit trail, field obfuscation, EU DSA / UK Online Safety Act / US state compliance.</td><td><div style="display:flex;flex-wrap:wrap;gap:3px;"><span class="lbadge">TikTok</span><span class="lbadge">BetMGM</span><span class="lbadge">FanDuel</span></div></td></tr>
+        <tr><td>Gig / marketplace</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">High-volume onboarding, identity reuse fraud across platforms</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">High throughput. Reusable identity — returning workers skip re-verification.</td><td><div style="display:flex;flex-wrap:wrap;gap:3px;"><span class="lbadge">Amazon</span><span class="lbadge">Airbnb</span><span class="lbadge">Walmart</span></div></td></tr>
+        <tr><td>Healthcare</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">Synthetic patient fraud in claims. HIPAA requirements.</td><td style="font-size:clamp(9px,0.84vw,12px);color:#21273B;">HIPAA-compliant, on-prem available, EHR integrations, irreversible deletion.</td><td><div style="display:flex;flex-wrap:wrap;gap:3px;"><span class="lbadge">Quest Diagnostics</span><span class="lbadge">Acrisure</span></div></td></tr>
+      </tbody>
+    </table>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 8 EMERGING USE CASES -->
+  <div class="slide s-white" id="s8">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">7 — Emerging use cases</div><div class="section-line"></div></div>
+      <div class="slide-title">Four categories redefining the IDV buyer</div>
+      <div class="slide-sub">Each has a distinct threat, a distinct buyer, and a distinct driver — all expanding beyond core financial services.</div>
+    </div>
+    <div class="uc-grid">
+      <div class="uccard">
+        <div class="uc-cat">Workforce</div>
+        <div class="uc-title">Help desk impersonation &amp; AI-generated candidates</div>
+        <ul class="uc-list">
+          <li>MGM-type breaches made workforce identity a board-level security issue</li>
+          <li>IAM, ITSM, and HR integrations required to qualify</li>
+          <li>WCAG 2.1 compliance is a procurement gate, not a preference</li>
+        </ul>
+        <div class="uc-key">Lemonade · PEGA · Banco Azteca <span class="uc-logo">(logos needed)</span></div>
+      </div>
+      <div class="uccard">
+        <div class="uc-cat">Healthcare</div>
+        <div class="uc-title">Synthetic patient fraud at insurance scale</div>
+        <ul class="uc-list">
+          <li>Telehealth created millions of remote patient interactions with no verification layer</li>
+          <li>On-premise deployment and irreversible deletion remove legal objections</li>
+          <li>HIPAA-compliant with EHR integrations out of box</li>
+        </ul>
+        <div class="uc-key">Quest Diagnostics · Acrisure · Hospital Angeles <span class="uc-logo">(logos needed)</span></div>
+      </div>
+      <div class="uccard">
+        <div class="uc-cat">Education</div>
+        <div class="uc-title">Ghost students claiming Pell grants at scale</div>
+        <ul class="uc-list">
+          <li>Synthetic identities claiming federal financial aid at scale</li>
+          <li>WCAG 2.1 AA is a legal requirement — non-compliant vendors are removed before evaluation</li>
+          <li>Compliance-driven buying motion with hard federal deadlines</li>
+        </ul>
+        <div class="uc-key">MSU · Arizona State University · Colorado State <span class="uc-logo">(logos needed)</span></div>
+      </div>
+      <div class="uccard">
+        <div class="uc-cat">Age verification</div>
+        <div class="uc-title">Regulatory mandates with direct personal liability</div>
+        <ul class="uc-list">
+          <li>EU, UK, US, Brazil, and Australia have created compliance buyers with hard deadlines</li>
+          <li>One of the few IDV buying motions driven entirely by external regulation</li>
+          <li>Shorter sales cycles, higher willingness to pay</li>
+        </ul>
+        <div class="uc-key">TikTok · Take-Two · Aylo <span class="uc-logo">(logos needed)</span></div>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 9 WIN/LOSE/SKIP -->
+  <div class="slide s-white" id="s9">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">8 — Competitive position</div><div class="section-line"></div></div>
+      <div class="slide-title">Where we win, where we lose, where we don't compete</div>
+    </div>
+    <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.4vw,18px);">
+
+      <!-- WIN -->
+      <div style="background:#f0faf5;border-radius:12px;padding:clamp(14px,2vh,22px) clamp(14px,1.6vw,22px);border:0.5px solid #a8d8b9;display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:clamp(28px,2.6vw,36px);height:clamp(28px,2.6vw,36px);border-radius:50%;background:#1a7a45;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="font-size:clamp(9px,0.88vw,12px);font-weight:700;color:#1a7a45;text-transform:uppercase;letter-spacing:0.08em;">Why clients choose Incode</div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:clamp(8px,1.2vh,14px);">
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#1a7a45;font-weight:700;">·</span>Fraud reduction and conversion improvement compound on the same platform. Incode is the only vendor where both reinforce each other.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#1a7a45;font-weight:700;">·</span>Best accuracy on fraud and deepfakes, validated by third-party benchmarks. 95% global POC win rate.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#1a7a45;font-weight:700;">·</span>Consultative engagement: deep implementation support, co-created workflows, outcome-based proof cases.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#1a7a45;font-weight:700;">·</span>Complex omni-channel deployment across in-person, online, on-premise, and hybrid environments.</li>
+        </ul>
+      </div>
+
+      <!-- LOSE -->
+      <div style="background:#fff9f0;border-radius:12px;padding:clamp(14px,2vh,22px) clamp(14px,1.6vw,22px);border:0.5px solid #e8c97a;display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:clamp(28px,2.6vw,36px);height:clamp(28px,2.6vw,36px);border-radius:50%;background:#b07d12;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <div style="font-size:clamp(9px,0.88vw,12px);font-weight:700;color:#b07d12;text-transform:uppercase;letter-spacing:0.08em;">Why clients choose someone else</div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:clamp(8px,1.2vh,14px);">
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#b07d12;font-weight:700;">·</span>Bespoke pricing has historically created friction in early-stage evaluations. The token-based model directly addresses this.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#b07d12;font-weight:700;">·</span>Buyers with a self-serve mindset expect to evaluate before engaging sales. We win when we get to a POC; the gap is earlier in the funnel.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#b07d12;font-weight:700;">·</span>First-run setup and out-of-box integrations have lagged. The ecosystem marketplace roadmap closes this with pre-built connectors to major IAM, ITSM, and HR platforms.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#b07d12;font-weight:700;">·</span>A self-serve sandbox launched this year — historically a significant gap that ended evaluations early. Directly closing this.</li>
+        </ul>
+      </div>
+
+      <!-- DON'T COMPETE -->
+      <div style="background:#f8f9fb;border-radius:12px;padding:clamp(14px,2vh,22px) clamp(14px,1.6vw,22px);border:0.5px solid #E6E6E6;display:flex;flex-direction:column;gap:clamp(10px,1.4vh,16px);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:clamp(28px,2.6vw,36px);height:clamp(28px,2.6vw,36px);border-radius:50%;background:#6E6E6E;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+          <div style="font-size:clamp(9px,0.88vw,12px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.08em;">Where Incode does not compete</div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:clamp(8px,1.2vh,14px);">
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#6E6E6E;font-weight:700;">·</span>Compliance-checkbox RFPs where the buyer has no interest in measuring outcomes.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#6E6E6E;font-weight:700;">·</span>Single-use-case deployments with no credible path to platform expansion.</li>
+          <li style="font-size:clamp(10.5px,0.94vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#6E6E6E;font-weight:700;">·</span>Low-volume accounts and APAC — out of scope until 2027.</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- DIV: Continuing our momentum -->
+  <div class="slide s-dark" id="sdiv3">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 2%;">
+      <div style="font-size:clamp(7px,0.7vw,9px);font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:clamp(8px,1.2vh,14px);">Section 4</div>
+      <div style="font-size:clamp(28px,4.2vw,54px);font-weight:300;color:#fff;line-height:1.1;">Continuing our momentum</div>
+      <div style="width:clamp(32px,3.5vw,48px);height:3px;background:#006CFF;border-radius:2px;margin:clamp(12px,1.8vh,20px) 0;"></div>
+      <div style="font-size:clamp(11px,1.02vw,14px);color:rgba(255,255,255,0.45);max-width:50%;">Investments that close current gaps and extend our lead into territory no IDV peer has entered.</div>
+    </div>
+    <div class="footer"><span class="footer-lw">incode</span><span class="footer-rw">Confidential</span></div>
+  </div>
+
+  <!-- 10 INVESTMENTS: CLOSING GAPS -->
+  <div class="slide s-white" id="s10">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">9 — Strategy</div><div class="section-line"></div></div>
+      <div class="slide-title">Investments: closing the gaps</div>
+      <div class="slide-sub">Directly addressing where market requirements have moved.</div>
+    </div>
+    <div class="inv-grid" style="flex:1;align-content:start;gap:clamp(6px,1vw,12px);">
+      <div class="icard">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:#E5F0FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006CFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="7" height="10" rx="1"/><rect x="15" y="7" width="7" height="10" rx="1"/><path d="M9 12h6"/><path d="M12 9v6"/></svg></div>
+          <div>
+            <div class="icard-cat" style="margin-bottom:1px;">Integration</div>
+            <div class="icard-title">Ecosystem marketplace</div>
+          </div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+          <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Pre-built connectors to Okta, ServiceNow, Workday, and major IAM and ITSM platforms.</li>
+          <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Additional connectors across CRM, banking, health, and HR platforms available through the marketplace, removing the custom integration burden entirely.</li>
+        </ul>
+      </div>
+      <div class="icard">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:#E5F0FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006CFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div>
+            <div class="icard-cat" style="margin-bottom:1px;">Accessibility</div>
+            <div class="icard-title">WCAG 2.1 AA compliance</div>
+          </div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+          <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Complete platform restructure for full accessibility compliance — covering end-user flows, admin portal, and all onboarding surfaces.</li>
+          <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Removes disqualification risk in education, healthcare, and regulated EU markets.</li>
+        </ul>
+      </div>
+      <div class="icard">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:#E5F0FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006CFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div>
+            <div class="icard-cat" style="margin-bottom:1px;">Customer experience</div>
+            <div class="icard-title">Professional services</div>
+          </div>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+          <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Launched dedicated CX team improving post-sale deployment quality and reducing time to value across new and existing clients.</li>
+          <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Generates outcome-based proof cases from live deployments that feed directly into the sales motion.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 11 INVESTMENTS: EXTENDING THE LEAD -->
+  <div class="slide s-white" id="s11">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">9 — Strategy (cont.)</div><div class="section-line"></div></div>
+      <div class="slide-title">Investments: extending the lead</div>
+      <div class="slide-sub">Moves into territory no IDV peer has entered yet.</div>
+    </div>
+    <div class="inv-grid inv-grid-2" style="flex:1;align-content:start;gap:clamp(6px,1vw,12px);">
+      <div class="icard"><div class="icard-cat">Defense stack</div><div class="icard-title">Deepsight for documents</div><div class="icard-body">Domain-specific VLM trained on identity document artifacts. Catches generative document fraud that template-matching misses. Q2 2026.</div></div>
+      <div class="icard"><div class="icard-cat">Defense stack</div><div class="icard-title">Expanded risk signals</div><div class="icard-body">Wider device and behavioral signal set. ETSI/CEN injection attack standard certification in progress — first IDV vendor to pursue it.</div></div>
+      <div class="icard"><div class="icard-cat">Defense stack</div><div class="icard-title">Agentic identity</div><div class="icard-body">Human-to-agent binding, scoped credential issuance, audit trail for agent-executed transactions.</div></div>
+      <div class="icard"><div class="icard-cat">Strategy</div><div class="icard-title">M&amp;A</div><div class="icard-body">Proven playbook: MetaMap, AuthenticID, and one additional acquisition in progress. Five pipeline categories: risk-based auth, transaction monitoring, workforce identity security, consolidation, talent acquisition.</div></div>
+      <div class="icard"><div class="icard-cat">Strategy</div><div class="icard-title">Token-based pricing</div><div class="icard-body">Flexible access to full platform stack. Scales up/down in real time. Removes pricing friction that historically ended early-stage evaluations.</div></div>
+      <div class="icard"><div class="icard-cat">Strategy</div><div class="icard-title">AI nativity</div><div class="icard-body">3x productivity target across every function. Internal competitions, prototyping sprints, AI-native tooling embedded across product and engineering.</div></div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 12 TRUST GRAPH -->
+  <div class="slide s-white" id="s12">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">10 — Trust Graph</div><div class="section-line"></div></div>
+      <div class="slide-title">Trust Graph: collective defense across institutions</div>
+      <div class="slide-sub">A cross-institution fraud intelligence network that detects what no single institution can see on its own.</div>
+    </div>
+    <div class="tg-split">
+      <div>
+        <div class="tg-point">
+          <div class="tg-pt">Bidirectional intelligence</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Flags known bad actors across all participating institutions simultaneously.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Accelerates verified good actors — a clean Trust Graph history reduces friction and improves conversion.</li>
+          </ul>
+        </div>
+        <div class="tg-point">
+          <div class="tg-pt">Privacy-preserving architecture</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Cross-institution signals shared via Secure Multi-Party Computation. No PII ever leaves the institution.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Once data enters the network, it can never exit in plain text. Privacy by design, not policy.</li>
+          </ul>
+        </div>
+        <div class="tg-point">
+          <div class="tg-pt">Detects what point-in-time systems can't</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>1:N biometric entity resolution catches synthetic identities using different names across institutions.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Also detects first-party fraud from customers with legitimate relationships — invisible to single-institution systems.</li>
+          </ul>
+        </div>
+        <div class="tg-point">
+          <div class="tg-pt">Production evidence</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>700+ clients generating daily signals.</li>
+          </ul>
+        </div>
+      </div>
+      <div style="background:#F5F5F7;border-radius:12px;padding:clamp(12px,2vh,20px) clamp(12px,1.8vw,20px);border:0.5px solid #E6E6E6;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 300 260" style="width:100%;max-width:320px;">
+          <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#006CFF" opacity="0.4"/></marker></defs>
+          <circle cx="150" cy="100" r="30" fill="#E5F0FF" stroke="#006CFF" stroke-width="1.5"/>
+          <text x="150" y="97" text-anchor="middle" font-size="11" fill="#006CFF" font-weight="700">Trust</text>
+          <text x="150" y="109" text-anchor="middle" font-size="11" fill="#006CFF" font-weight="700">Graph</text>
+          <circle cx="62" cy="188" r="22" fill="#E6E6E6" stroke="#ccc" stroke-width="1"/>
+          <text x="62" y="185" text-anchor="middle" font-size="12" fill="#666">Bank A</text>
+          <circle cx="150" cy="218" r="22" fill="#E6E6E6" stroke="#ccc" stroke-width="1"/>
+          <text x="150" y="215" text-anchor="middle" font-size="12" fill="#666">Telco B</text>
+          <circle cx="238" cy="188" r="22" fill="#E6E6E6" stroke="#ccc" stroke-width="1"/>
+          <text x="238" y="185" text-anchor="middle" font-size="12" fill="#666">Bank C</text>
+          <line x1="150" y1="130" x2="78" y2="170" stroke="#006CFF" stroke-width="1" stroke-dasharray="4,3" opacity="0.4" marker-end="url(#arr)"/>
+          <line x1="150" y1="130" x2="150" y2="196" stroke="#006CFF" stroke-width="1" stroke-dasharray="4,3" opacity="0.4" marker-end="url(#arr)"/>
+          <line x1="150" y1="130" x2="222" y2="170" stroke="#006CFF" stroke-width="1" stroke-dasharray="4,3" opacity="0.4" marker-end="url(#arr)"/>
+          <circle cx="28" cy="140" r="11" fill="#FEF0F0" stroke="#e74c3c" stroke-width="1.5"/>
+          <text x="28" y="144" text-anchor="middle" font-size="12" fill="#c0392b">✕</text>
+          <text x="28" y="158" text-anchor="middle" font-size="9.5" fill="#c0392b">Flagged</text>
+          <text x="28" y="168" text-anchor="middle" font-size="9.5" fill="#c0392b">Bank A</text>
+          <line x1="39" y1="146" x2="45" y2="171" stroke="#e74c3c" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+          <circle cx="272" cy="140" r="11" fill="#FEF0F0" stroke="#e74c3c" stroke-width="1.5"/>
+          <text x="272" y="144" text-anchor="middle" font-size="12" fill="#c0392b">✕</text>
+          <text x="272" y="158" text-anchor="middle" font-size="9.5" fill="#c0392b">Blocked</text>
+          <text x="272" y="168" text-anchor="middle" font-size="9.5" fill="#c0392b">Bank C</text>
+          <line x1="261" y1="146" x2="255" y2="171" stroke="#e74c3c" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+          <circle cx="150" cy="36" r="11" fill="#f0faf5" stroke="#1a7a45" stroke-width="1.5"/>
+          <text x="150" y="40" text-anchor="middle" font-size="12" fill="#1a7a45">✓</text>
+          <text x="150" y="53" text-anchor="middle" font-size="9.5" fill="#1a7a45">Trusted</text>
+          <line x1="150" y1="47" x2="150" y2="70" stroke="#1a7a45" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+          <text x="150" y="252" text-anchor="middle" font-size="12" fill="#aaa">Fraudster rejected by one — flagged for all. No PII shared.</text>
+        </svg>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 13 AGENTIC IDENTITY -->
+  <div class="slide s-white" id="s13">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">11 — Agentic identity</div><div class="section-line"></div></div>
+      <div class="slide-title">Securing the agentic internet</div>
+      <div class="slide-sub">AI agents are executing real transactions today. The identity infrastructure to govern them doesn't exist at scale yet.</div>
+    </div>
+    <div class="ag-cols">
+      <div>
+        <div class="ag-pt">
+          <div class="ag-pt-t">Why agents break existing IDV</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Agents generate no useful telemetry — they run from identical infrastructure with identical behavioral patterns.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>The only durable signal is the verified link to the human behind them.</li>
+          </ul>
+        </div>
+        <div class="ag-pt">
+          <div class="ag-pt-t">The identity challenge this creates</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>An agent cannot present a face or a document. It must present proof that a verified human explicitly authorized it, within a defined scope.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Biometrics is the only gatekeeping mechanism agents cannot replicate.</li>
+          </ul>
+        </div>
+        <div class="ag-pt">
+          <div class="ag-pt-t">Incode's position</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Building the agentic identity layer on top of existing deployed infrastructure — no greenfield build required.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>When an agent attempts a high-sensitivity action, verification routes to the human principal. The human is always the root of trust.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ag-box">
+        <div style="font-size:clamp(7px,0.7vw,9px);font-weight:700;color:#6E6E6E;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Incode's agentic architecture</div>
+        <div class="ag-step"><div class="ag-step-t">Detect</div><div class="ag-step-b">Identify agentic sessions on human-facing surfaces. Distinguish between agent and human traffic in real time.</div></div>
+        <div class="ag-step"><div class="ag-step-t">Bind</div><div class="ag-step-b">Link the agent to a verified human owner via biometric confirmation. Scoped credential issued for authorized actions only.</div></div>
+        <div class="ag-step"><div class="ag-step-t">Monitor</div><div class="ag-step-b">Use Trust Graph to continuously monitor signals associated with the human owner. Human and agentic activity linked in a single identity record.</div></div>
+        <div class="ag-step"><div class="ag-step-t">Audit</div><div class="ag-step-b">Full chain of custody for every agent-executed transaction. Compatible with MCP, A2A, and open protocols.</div></div>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+  <!-- 14 CLOSING -->
+  <div class="slide s-white" id="s14">
+    <div class="hdr">
+      <div class="section-row"><div class="section-label">12 — Closing</div><div class="section-line"></div></div>
+      <div class="slide-title">Built for the market as it is, not as it was</div>
+    </div>
+    <div class="cl-cols" style="flex:1;padding-top:8px;">
+      <div class="clcard">
+        <div class="cl-num">1</div>
+        <div class="cl-title">The market permanently changed</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>GenAI industrialized attacks. Agentic threats introduced a category that didn't exist two years ago.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Lifecycle exposure made every identity touchpoint a vulnerability.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Vendors built for yesterday's environment cannot retrofit their way into what comes next.</li>
+        </ul>
+      </div>
+      <div class="clcard">
+        <div class="cl-num">2</div>
+        <div class="cl-title">Incode is built for this environment</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Proprietary models, government source connections, and a cross-institutional signal network — all compounding through the same platform.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Verification is the entry point. The intelligence it generates across the lifecycle is the product.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Competitors can copy a feature. They cannot copy a system built across six years and 7.1B identity checks.</li>
+        </ul>
+      </div>
+      <div class="clcard">
+        <div class="cl-num">3</div>
+        <div class="cl-title">The next 12–18 months determine the category</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Which vendors get designed into integration layers that are hard to displace.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Which vendor establishes the trust model for agentic identity before the category standardizes.</li>
+            <li style="font-size:clamp(10px,0.9vw,13px);color:#21273B;line-height:1.45;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:#006CFF;font-weight:700;">·</span>Which vendor's intelligence network reaches the critical mass where the signal advantage becomes self-sustaining.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-l">incode</span><span class="footer-r">Confidential</span></div>
+  </div>
+
+</div>
+
+<script>
+  let cur = 0;
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  const dotsEl = document.getElementById('dots');
+  document.getElementById('tot').textContent = total;
+  for(let i = 0; i < total; i++){
+    const d = document.createElement('button');
+    d.className = 'dot' + (i===0?' active':'');
+    d.onclick = (idx => () => goTo(idx))(i);
+    dotsEl.appendChild(d);
+  }
+  function goTo(n){
+    slides[cur].classList.remove('active');
+    dotsEl.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsEl.children[cur].classList.add('active');
+    document.getElementById('cur').textContent = cur+1;
+    document.getElementById('prev').disabled = cur===0;
+    document.getElementById('next').disabled = cur===total-1;
+  }
+  function go(dir){ goTo(Math.max(0, Math.min(total-1, cur+dir))); }
+  document.addEventListener('keydown', e => { if(e.key==='ArrowRight') go(1); if(e.key==='ArrowLeft') go(-1); });
+  document.getElementById('prev').disabled = true;
+</script>
+</body>
+</html>
